@@ -1,0 +1,3059 @@
+<script language=JavaScript>
+<!--
+var acBack		= 0;
+var acConfirm	= 1;
+var acCancel	= 2;
+var acAdd		= 3;
+var acSave		= 4;
+var acDelete	= 5;
+var acClear		= 6;
+var acProtocol	= 7;
+var acMap		= 8;
+var acReport	= 9;
+var acPrint		= 10;
+var acEdit		= 11;
+var acNext      = 12;
+var acGera		= 17;
+
+function LoadButton()
+{
+	var a = LoadButton.arguments;
+	var fcn='LoadButton(';
+	//alert(a.length);
+	for(var i=0; i < a.length; i++) {
+		if( i % 2 == 1 )
+			fcn+= "'" + a[i] + "'"
+		else
+			fcn+= a[i]
+		if( i != a.length-1 ) fcn+= ','
+	}
+	fcn+= ')'
+	
+	if( !top.bottomFrame.LoadButton || top.bottomFrame.frmOk == 'N')
+		setTimeout(fcn,1000)
+	else
+		top.bottomFrame.LoadButton(a)
+}
+
+function autotab(campo1, campo2, tamanho, frm) {
+	var tam = parseInt(tamanho);
+	if (eval('document.'+frm+'.'+campo1+'.value.length') >= tam) {
+		eval('document.'+frm+'.'+campo2+'.focus()');
+	} 
+}
+
+function focar_rgf(){
+	document.form.RGF.focus()
+	return true
+}
+
+function limpar_RGF(){
+	document.form.RGF.value= " "
+	focar_rgf()
+	return true
+}
+
+function checkForm(){  
+	
+	return true;
+}
+
+function checkFormSenha(){  
+	if (document.form.SENHAATUAL.value.length != 4) {
+	  window.alert("Senha atual inválida !");  
+	  focar_senha()
+	  return false;  
+	}
+	if (document.form.SENHANOVA.value.length != 4) {
+	  window.alert("Senha nova inválida !");  
+	  focar_senha()
+	  return false;  
+	}
+	if (document.form.SENHANOVA.value != document.form.SENHANOVA1.value) {
+	  window.alert("Novas senhas não conferem !");  
+	  focar_senha()
+	  return false;  
+	}
+	return true;
+}
+
+function focar_senha(){
+	document.form.SENHAATUAL.focus()
+	return true
+}
+
+function isNumeric(pchar)	{
+	var numeric = true;
+		
+	if (pchar.length == 0 )	{
+		return false;
+	}
+		
+	for (i=0; i < pchar.length; i++)	{
+		if (!isDigit(pchar.charAt(i)))	{
+			numeric = false;
+			break;
+		}
+	}
+		
+	return numeric;
+}
+
+function isDigit(pchar)	{
+	return ("0123456789.".indexOf(pchar)>=0);
+}
+
+function isDigitDate(pchar)	{
+	return ("0123456789./".indexOf(pchar)>=0);
+}
+
+function isDate(data) {
+		
+	if (data == "")	{
+		return true;
+	}
+		
+	var numeros = data.split("/");
+		
+	if (isNumberDate(data) == false)	{
+		alert("Data inválida.");
+		return false;
+	}
+				
+	var dia = parseFloat(numeros[0]);
+	var mes = parseFloat(numeros[1]);
+	var ano = parseFloat(numeros[2]);
+	var tamanho_ano = String(ano);
+				
+	if (isNaN(dia) || isNaN(mes) || isNaN(ano) ) {
+		alert("Data inválida.");
+		return false;
+	}
+		
+	if (mes<1 || mes>12) return false;
+			
+	if (dia<1 || dia>31) return false;
+		
+	if (ano>2100) return false;
+		
+	if (ano<1000) return false;
+		
+	if(mes==4 || mes==6 || mes==9 || mes==11){
+		if (dia==31) return false;
+	}
+	if (mes==2){
+		if (dia>29) return false;
+		if (dia==29 && ((ano/4) != parseInt(ano/4,10))) return false;
+    }
+		
+	return true;
+}
+ 
+function isNumber(num){
+	var numeric = true;
+	for(i=0; i < num.length; i++){
+		if (!isDigit(num.charAt(i))) {
+			numeric = false;
+			break;
+		}
+	}
+	return numeric;
+}
+	
+function isNumberDate(num){
+	var numeric = true;
+	for(i=0; i < num.length; i++){
+		if (!isDigitDate(num.charAt(i))) {
+			numeric = false;
+			break;
+		}
+	}
+	return numeric;
+}	
+
+function isNumber3(num){
+	var numeric = true;
+	for(i=0; i < num.length; i++){
+		if (!isDigit3(num.charAt(i))) {
+			numeric = false;
+			break;
+		}
+	}
+	return numeric;
+}
+	
+function isDigit3(pchar)	{
+	return ("0123456789".indexOf(pchar)>=0);
+}
+	
+// Função igual ao UCase do VB.	
+function ucase(parTexto)	{	
+	var texto = new String();
+	texto = parTexto;
+	texto = texto.toUpperCase();
+	return texto;
+}
+
+//digita em maiúscula - chamada em onKeyPress do Input Text
+function uppercase() { 
+	key = window.event.keyCode; 
+	if ( (key == 0x20) || (key == 0x2F) ) {
+		window.event.keyCode = key; 
+	} else {
+		window.event.keyCode = key-0x20;
+	}
+} 
+
+// Função igual ao LCase do VB.	
+function lcase(parTexto)	{	
+	var texto = new String();
+	texto = parTexto;
+	texto = texto.toLowerCase();
+	return texto;
+}
+	
+
+function CarregaComboJS(p_selected, p_selected2, p_obj_target, p_array_options,p_selected_value) {
+	var opt0 = p_obj_target.options[0];
+	p_obj_target.length=0;
+	
+	p_obj_target.options[0]=opt0;
+	//if(p_selected == '') 
+	//	return;
+	
+	var i=0;
+	
+	while(i < p_array_options.length) {
+	   if(p_selected2 != '') {
+			if(p_array_options[i][2] == p_selected && p_array_options[i][3] == p_selected2){
+			   p_obj_target.options[p_obj_target.length] = new Option(p_array_options[i][1],p_array_options[i][0],false,(p_selected_value? p_selected_value==p_array_options[i][0]:false)); 
+			}
+	   }else {
+		if(p_array_options[i][2] == p_selected){
+			   p_obj_target.options[p_obj_target.length] = new Option(p_array_options[i][1],p_array_options[i][0],false,(p_selected_value? p_selected_value==p_array_options[i][0]:false)); 
+		}
+	   }
+	   i++;
+	}	
+}
+
+function CarregaComboJS2(p_level, p_selected, p_selected2, p_selected3, p_obj_target, p_array_options,p_selected_value) {
+	var opt0 = p_obj_target.options[0];
+	p_obj_target.length=0;
+	p_obj_target.options[0]=opt0;
+	
+	var i=0;
+	
+	while(i < p_array_options.length) {
+	   if(p_level == '3') {
+			if(p_array_options[i][2] == p_selected && p_array_options[i][3] == p_selected2 && p_array_options[i][4] == p_selected3){
+			   p_obj_target.options[p_obj_target.length] = new Option(p_array_options[i][1],p_array_options[i][0],false,(p_selected_value? p_selected_value==p_array_options[i][0]:false)); 
+			}
+	   }else if(p_level == '2') {
+			if(p_array_options[i][2] == p_selected && p_array_options[i][3] == p_selected2){
+			   p_obj_target.options[p_obj_target.length] = new Option(p_array_options[i][1],p_array_options[i][0],false,(p_selected_value? p_selected_value==p_array_options[i][0]:false)); 
+			}
+	   }else {
+		if(p_array_options[i][2] == p_selected){
+			   p_obj_target.options[p_obj_target.length] = new Option(p_array_options[i][1],p_array_options[i][0],false,(p_selected_value? p_selected_value==p_array_options[i][0]:false)); 
+		}
+	   }
+	   i++;
+	}
+	if(p_obj_target.length == 2) {
+		 p_obj_target.value = p_obj_target.options[1].value;
+	}
+	if(p_obj_target.length == 1) {
+		 p_obj_target.value = p_obj_target.options[0].value;
+	}
+}
+
+/* -------------------------------------------------- Nome Mes -------------------------------------------------- */
+
+function fncNomeMes(intMes)
+{
+	switch (intMes)
+	{
+		case 1: return "Janeiro";
+		case 2: return "Fevereiro";
+		case 3: return "Março";
+		case 4: return "Abril";
+		case 5: return "Maio";
+		case 6: return "Junho";
+		case 7: return "Julho";
+		case 8: return "Agosto";
+		case 9: return "Setembro";
+		case 10: return "Outubro";
+		case 11: return "Novembro";
+		case 12: return "Dezembro";
+	}
+	return "";
+}
+
+function fncNomeMesInglesAbreviado(intMes)
+{
+	switch (intMes)
+	{
+		case 1: return "JAN";
+		case 2: return "FEB";
+		case 3: return "MAR";
+		case 4: return "APR";
+		case 5: return "MAY";
+		case 6: return "JUN";
+		case 7: return "JUL";
+		case 8: return "AUG";
+		case 9: return "SEP";
+		case 10: return "OCT";
+		case 11: return "NOV";
+		case 12: return "DEC";
+	}
+	return "";
+}
+
+/* -------------------------------------------------- Painel com scroll -------------------------------------------------- */
+
+function scrollerObj(name,initH,initW,heightB,widthB,content,initBg,Bg,speed,initFl)
+{
+	this.name=name;
+	this.initH=initH;
+	this.initW=initW;
+	this.heightB=heightB;
+	this.widthB=widthB;
+	this.content=content;
+	this.initBg=initBg;
+	this.Bg=Bg;
+	this.iniFl=initFl;
+	this.speed=parseInt(speed);
+	this.timer = name + "Timer";
+	this.elem;
+	
+	this.getElement = getElement;
+	this.createLayer=createLayer;
+	this.scrollLayer = scrollLayer; 
+	this.scrollLoop=scrollLoop;
+	
+	this.createLayer();
+	this.getElement();
+	this.scrollLayer();
+}
+ 
+    function scrollLoop(s){
+    this.speed = s;
+    }
+ 
+function scrollLayer()
+{
+    if (parseInt(this.elem.style.top)>(this.elem.offsetHeight*(-1)))
+        this.elem.style.top = parseInt(this.elem.style.top)-this.speed;
+    else 
+		this.elem.style.top = this.initH;
+}
+ 
+function getElement()
+{
+    if(document.getElementById)
+		this.elem = document.getElementById(this.name);
+    else if (document.all)
+		this.elem = document.all[name];
+    else if (document.layers)
+		this.elem = document.layers[name];
+}
+ 
+function createLayer()
+{ 
+    if(document.getElementById || document.all)
+    {
+		document.write('<div id="layer'+this.name+'" style="position:relative;overflow:hidden;float:'+this.initFl+';background-color:#'+this.initBg+';border:1px solid #ffffff; width:'+this.initW+'px;height:'+this.initH+'px;" onMouseover="'+this.name+'.scrollLoop(0)" onMouseout="'+this.name+'.scrollLoop('+this.speed+')">');
+		document.write('<div id="'+this.name+'" style="position:absolute;top:'+this.initH+'px;left:0px;border:0px solid black;width:'+this.widthB+'px;height:'+this.heightB+'px;background-color:#'+this.Bg+'">');
+		document.write(this.content);
+		document.write('<\/div><\/div>');
+	}
+	else if(document.layers)
+	{
+		document.write('<ilayer name="'+this.name+'" bgcolor="#EAEDF5'+this.Bg+'" width="'+this.widthB+'" height="'+this.heightB+'">'+this.content+'<\/ilayer>');
+        return;
+    }
+    
+    if(this.scrollLayer)
+		this.timer = setInterval(this.name+'.scrollLayer()','35');
+}
+
+function MM_reloadPage(init) //reloads the window if Nav4 resized
+{
+	if (init==true) with (navigator) 
+	{
+		if ((appName=="Netscape") && (parseInt(appVersion)==4)) 
+			document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; 
+	}
+	else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) 
+		location.reload();
+}
+
+/* -------------------------------------------------- /Painel com scroll -------------------------------------------------- */
+
+/* ----------------------------------------------------------------------
+Função de impressão
+The code by Captain <cerebrum@iname.com>
+Mead & Company, http://www.meadroid.com/wpm/
+---------------------------------------------------------------------- */
+
+function printFrame(frame, onfinish)
+{	
+	if ( IsNS4() ) {
+		if ( !frame ) window.print(); else frame.print();
+			return;
+	}
+	
+	if ( !frame ) 
+		frame = window;
+	
+	/*if ( !IsNS4() && frame.document.readyState != "complete" )
+	{   
+		if ( !confirm("O documento a ser impresso ainda não terminou de ser carregado! Proceder com a impressão?") )
+		{
+			if ( onfinish ) onfinish();
+			return;
+		}
+	}*/
+	
+	if ( printIsNativeSupport() )
+	{
+		/* focus handling for this scope is IE5Beta workaround,
+		should be gone with IE5 RTM.
+		*/
+		
+		var focused = document.activeElement; 
+		frame.focus();
+		frame.self.print();
+	     
+		//if ( onfinish ) onfinish();
+		
+		if ( focused && !focused.disabled ) 
+			focused.focus();
+		
+		return;
+	}
+
+	var eventScope = printGetEventScope(frame);
+	var focused = document.activeElement;
+
+	window.printHelper = function() {
+		execScript("on error resume next: printWB.ExecWB 6, 1", "VBScript");
+		printFireEvent(frame, eventScope, "onafterprint");
+		printWB.outerHTML = "";
+		if ( onfinish ) onfinish();
+		if ( focused && !focused.disabled ) focused.focus();
+		window.printHelper = null;
+	}
+
+	document.body.insertAdjacentHTML("beforeEnd",
+		"<object id=\"printWB\" width=0 height=0 \
+		classid=\"clsid:8856F961-340A-11D0-A96B-00C04FD705A2\"></object>");
+	
+	printFireEvent(frame, eventScope, "onbeforeprint");
+	frame.focus();
+	window.printHelper = printHelper;
+	setTimeout("window.printHelper()", 0);
+}
+
+function IsNS4() {
+  return navigator.appName == "Netscape";
+}
+
+function printIsNativeSupport() {
+  var agent = window.navigator.userAgent;
+  var i = agent.indexOf("MSIE ")+5;
+  return parseInt(agent.substr(i)) >= 5 && agent.indexOf("5.0b1") < 0;
+}
+
+function printFireEvent(frame, obj, name) {
+  var handler = obj[name];
+  switch ( typeof(handler) ) {
+    case "string": frame.execScript(handler); break;
+    case "function": handler();
+  }
+}
+
+function printGetEventScope(frame) {
+  var frameset = frame.document.all.tags("FRAMESET");
+  if (frameset.length)
+	return frameset[0];
+  return frame.document.body;
+}
+
+
+/************************************************************************************************
+ * Funções em JavaScript que lidam com Conversao de Dados					*
+ ************************************************************************************************/
+
+//ltrim: Trim à Esquerda de campo String
+function ltrim(str)
+{
+	for(var i=0; i < str.length && str.charAt(i) == ' '; i++);
+	
+	return( str.substr(i,str.length-i) );
+}
+
+//rtrim: Trim à Direita de campo String
+function rtrim(str)
+{
+	for(var i=str.length-1; i > 0 && str.charAt(i) == ' '; i--);
+	
+	return( str.substr(0,i+1) );
+}
+
+//trim: Trim de campo String
+function trim(str)
+{
+	return( ltrim(rtrim(str)) );
+}
+
+// time2sec: Converse um horário em número de segundos
+function time2sec(hora,minuto,segundo)
+{
+var Str, h, m, s;
+	h = parseInt(hora);
+	m = parseInt(minuto);
+	s = parseInt(segundo);
+	if ( isNaN(h) )  return(-1);
+	if ( isNaN(m) )  return(-1);
+	if ( isNaN(s) )  return(-1);
+	if (h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59) return(-1);
+	return( h * 3600 + m * 60 + s );
+}
+
+function checkvalfalta(object,indice,notamax){
+ vpos = "0123456789"
+ y = String(object.value)
+ tam = y.length
+ tam1 = vpos.length
+ pres = 0
+ for (p = 0 ; p < tam ; p++){
+  pedaco = y.substring(p,p + 1)
+  for (u = 0 ; u < tam1 ; u++){
+   pedaco1 = vpos.substring(u,u + 1)
+   if (pedaco == pedaco1){
+    pres++
+   }
+  }
+ }
+ if (pres != tam) { 
+  window.alert("\nFalta possui caracteres inválidos: \t\nRA: "+indice+"\nFALTA: "+y+"\n")
+  object.value = ""
+//  object.focus()
+  return false;
+ }
+}
+ 
+function checkvalnota(object,indice,notamax){
+ //verifica todos os caracteres
+ vpos = "0123456789.,"
+ y = String(object.value)
+ tam = y.length
+ tam1 = vpos.length
+ pres = 0
+ for (p = 0 ; p < tam ; p++){
+  pedaco = y.substring(p,p + 1)
+  for (u = 0 ; u < tam1 ; u++){
+   pedaco1 = vpos.substring(u,u + 1)
+   if (pedaco == pedaco1){
+    pres++
+   }
+  }
+ }
+ if (pres != tam) {
+ 	if (indice==0) { 
+		window.alert("\nNota possui caracteres inválidos: \t\nNOTA: "+y+"\n")
+	} else {
+		window.alert("\nNota possui caracteres inválidos: \t\nRA: "+indice+"\nNOTA: "+y+"\n")
+	}
+  object.value = ""
+//  object.focus()
+  return false;
+ }
+ //substitui virgula por ponto - 37
+ qtdvir = 0
+ qtdpon = 0
+ svir = ""
+ for (p = 0 ; p < tam ; p++){
+  pedaco = y.substring(p,p + 1)  
+  if (pedaco == ","){   
+   pedaco = "."
+   qtdvir++
+  } 
+  if (pedaco == "."){   
+   qtdpon++
+  } 
+ svir = svir + pedaco
+ }
+ object.value = svir
+
+ //verifica mais q uma virgula ou ponto
+ if (qtdvir>1 || qtdpon>1){
+ 	if (indice==0) { 
+		window.alert("\nNota possui caracteres duplicados: \t\nNOTA: "+y+"\n")
+	} else { 
+		window.alert("\nNota possui caracteres duplicados: \t\nRA: "+indice+"\nNOTA: "+y+"\n")
+	}
+  object.value = ""
+//  object.focus()
+  return false;
+ }
+
+ // verifica se os numeros sao validos
+ // entrada de dados somente numeros
+ // decimal somente .
+ ocor = true
+ if (! isNaN(parseFloat(object.value))) {
+ x = parseFloat(object.value)
+ for (i = 0.00 ; i <= 10.00 ;){
+    if (i == x) {
+     ocor = false
+    }
+    i = i + 0.50
+  }
+  if (ocor) {
+ 	if (indice==0) { 
+		window.alert("\nNota possui valor inválido: \t\nNOTA: "+y+"\n")
+	} else {  
+		window.alert("\nNota possui valor inválido: \t\nRA: "+indice+"\nNOTA: "+y+"\n")
+	}
+   object.value = ""
+   return false;
+  }
+ }
+ 
+ if(parseFloat(object.value) > parseFloat(notamax)) {
+  	if (indice==0) { 
+		window.alert("\nO valor máximo dessa nota é " + notamax + ".\nEsse valor foi definido na Página de Habilitação!" )
+	} else {
+		window.alert("\nO valor máximo dessa nota é " + notamax + "\nEsse valor foi definido no Sistema de Provas" )
+	}
+    object.value = ""
+    return false;
+ }
+
+}
+
+/* ----------------------- Funções de validação ----------------------------------------*/
+
+function ValidaCampoRequerido(obj, strLabel)
+{
+	if (obj == null) {
+		alert("Erro na chamada da função ValidaCampoRequerido o obj==null. Campo = '" + nome);
+		return false;
+	}
+	
+	if (obj.value == "")
+	{
+		alert("O campo \"" + strLabel + "\" deve ser preenchido.");
+		obj.focus();
+		return false;
+	}
+	
+	return true;
+}
+
+function ValidaTamanhoCampo(obj, intTamanho, strLabel)
+{
+	if (obj.value.length > intTamanho)
+	{
+		alert("O tamanho máximo do campo \"" + strLabel + "\" é " + intTamanho + ".");
+		obj.value = obj.value.substring(0, intTamanho);
+		obj.focus();
+	}
+}
+
+function ValidaCampoEmail(obj, strLabel)
+{
+	if (obj.value == "")
+	{
+		alert("O campo \"" + strLabel + "\" deve ser preenchido.");
+		obj.focus();
+		return false;
+	}
+	
+	if (obj.value.indexOf('@') == -1)
+	{
+		alert("O campo \"" + strLabel + "\" deve ser preenchido corretamente.");
+		obj.focus();
+		return false;
+	}
+	
+	return true;
+}
+
+function ValidaCampoData(obj, strLabel, formato)
+{
+	if (obj.value == "")
+		return true;
+	
+	if (!ValidaData(obj.value, formato))
+	{
+		alert("O campo \"" + strLabel + "\" está no formato incorreto ou a data é inválida.\r\nO formato deve ser: \"" + formato + "\".");
+		obj.focus();
+		return false;
+	}
+	
+	return true;
+}
+
+function ValidaCampoDataRequerido(obj, strLabel, formato)
+{
+	if (obj.value == "")
+	{
+		alert("O campo \"" + strLabel + "\" é requerido.");
+		obj.focus();
+		return false;
+	}
+	
+	if (!ValidaData(obj.value, formato))
+	{
+		alert("O campo \"" + strLabel + "\" está no formato incorreto ou a data é inválida.\r\nO formato deve ser: \"" + formato + "\".");
+		obj.focus();
+		return false;
+	}
+	
+	return ValidaCampoData(obj, strLabel, formato);
+}
+
+function ValidaData(data, formato, obj)
+{
+	var dia, mes, ano;	
+
+	if (data == "")
+		return false;
+	
+	if (formato == "dd/mm/aaaa" || formato == "dd/mm/yyyy")
+	{	
+		if (data.length < 10){
+			alert('Favor corrigir a data informada. A data deve ter o formato dd/mm/aaaa');
+			obj.value = ''
+			obj.focus();
+			return false;
+		}
+		dia = data.substr(0, 2);
+		mes = data.substr(3, 2);
+		ano = data.substr(6, 4);
+
+	
+		if (data.substr(2, 1) != "/"){
+			alert('A data informada é inválida, favor corrigir.')
+			obj.value = ''
+			obj.focus();
+			return false;
+		}
+		if (data.substr(5, 1) != "/"){
+			alert('A data informada é inválida, favor corrigir.')
+			obj.value = ''
+			obj.focus();
+			return false;
+		}
+		if (!ValidaNumero(dia) || !ValidaNumero(mes) || !ValidaNumero(ano)){
+			alert('A data informada é inválida, favor corrigir.')
+			obj.value = ''
+			obj.focus();
+			return false;
+		}
+		if (ano < 1800 || ano > 2100){
+			alert('A data informada é inválida, favor corrigir.')
+			obj.value = ''
+			obj.focus();
+			return false;
+		}
+		if (mes < 1 ||  mes > 12){
+			alert('A data informada é inválida, favor corrigir.')
+			obj.value = ''
+			obj.focus();
+			return false;
+		}						
+		if (dia < 1 || dia > 31){
+			alert('A data informada é inválida, favor corrigir.')
+			obj.value = ''
+			obj.focus();
+			return false;		
+		}		
+		return true;
+	}else{
+		alert("Um FORMATO invalido foi passado como parametro para a função JavaScript ValidaData(). Formato passado: \"" + formato + "\".");
+		return false;
+	}
+	
+	return false;
+}
+
+function ValidaCampoTempoRequerido(obj, strLabel, formato)
+{
+	if (obj.value == "")
+	{
+		alert("O campo \"" + strLabel + "\" é requerido.");
+		obj.focus();
+		return false;
+	}
+	
+	if (!ValidaTempo(obj.value, formato))
+	{
+		alert("O campo \"" + strLabel + "\" está no formato incorreto ou a hora é inválida.\r\nO formato deve ser: \"" + formato + "\".");
+		obj.focus();
+		return false;
+	}
+	
+	return true;
+}
+
+function ValidaTempo(tempo, formato)
+{
+	var hora, minuto, segundo;	
+	
+	if (tempo == "")
+		return false;
+	
+	if (formato == "hh:mm:ss")
+	{
+		if (tempo.length < 8)
+			return false;
+		
+		hora = tempo.substr(0, 2);
+		minuto = tempo.substr(3, 2);
+		segundo = tempo.substr(6, 2);
+		
+		if (tempo.substr(2, 1) != ":")
+			return false;
+		
+		if (tempo.substr(5, 1) != ":")
+			return false;
+		
+		if (!ValidaNumero(hora))
+			return false;
+		
+		if (!ValidaNumero(minuto))
+			return false;
+		
+		if (!ValidaNumero(segundo))
+			return false;
+						
+		if (hora < 0 || hora > 23)
+			return false;
+				
+		if (minuto < 0 || minuto > 59)
+			return false;
+		
+		if (segundo < 0 || segundo > 59)
+			return false;		
+				
+		return true;
+	}
+	else
+	{
+		alert("Um FORMATO invalido foi passado como parametro para a função JavaScript ValidaTempo(). Formato passado: \"" + formato + "\".");
+	}
+	
+	return false;
+}
+
+function ValidaNumero(numero)
+{
+	var ValidChars = "0123456789.,";
+	var IsNumber=true;
+	var Char;
+	
+	if (numero == "")
+		return false;
+	
+	for (i = 0; i < numero.length && IsNumber == true; i++) 
+	{
+		Char = numero.charAt(i);
+		if (ValidChars.indexOf(Char) == -1) 
+			IsNumber = false;
+	}
+	
+	return IsNumber;
+}
+
+function fncOnKeyPressSomenteNumeros(e)
+{
+	if (e.preventDefault)
+		return;
+				
+	if (e.keyCode == 13)
+	{
+		//ignore
+	}
+	else if (e.keyCode < 48 || e.keyCode > 57)
+	{
+		alert("Por favor, digite apenas números."); 
+		e.returnValue = false;
+	}
+}
+
+//função que valida um CNPJ - Reinaldo - 24/02/2011
+function vcnpj( cnpj ) {
+ var numeros, digitos, soma, i, resultado, pos, tamanho, digitos_iguais; 
+ 
+	digitos_iguais = 1;
+    if (cnpj.length != 14) {
+	    alert('CNPJ inválido');
+        cnpj.focus();
+        return false;
+    }//if
+
+    for (i = 0; i < cnpj.length - 1; i++)
+    	if (cnpj.charAt(i) != cnpj.charAt(i + 1)) {
+	        digitos_iguais = 0;
+            break;
+        }//if
+     	if (!digitos_iguais) {
+           	tamanho = cnpj.length - 2
+           	numeros = cnpj.substring(0,tamanho);
+           	digitos = cnpj.substring(tamanho);
+           	soma = 0;
+           	pos = tamanho - 7;
+           	for (i = tamanho; i >= 1; i--) {
+		 		soma += numeros.charAt(tamanho - i) * pos--;
+			 	if (pos < 2)
+					pos = 9;
+			}//for
+           	resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+           	if (resultado != digitos.charAt(0)) {
+            	alert('CNPJ inválido');
+                cnpj.focus();
+                return false;
+            }//if
+			tamanho = tamanho + 1;
+           	numeros = cnpj.substring(0,tamanho);
+           	soma = 0;
+           	pos = tamanho - 7;
+           	for (i = tamanho; i >= 1; i--) {
+            	soma += numeros.charAt(tamanho - i) * pos--;
+                if (pos < 2)
+                       pos = 9;
+            }//for
+           	resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+           	if (resultado != digitos.charAt(1)) {
+            	alert('CNPJ inválido');
+                cnpj.focus();
+                return false;
+            }//if
+           	else {
+		    	//CNPJ OK 
+            	return true;
+            }//else
+        }//if
+     	else {
+           	alert('CNPJ inválido');
+           	cnpj.focus();
+           	return false;
+        }//else
+}//func 
+
+function fncOnKeyPressSomenteValor(e) 
+{ 
+	var key=e.which; //keycode
+	if (key == null)
+		key = event.keyCode;
+	
+	if (key==8 || key==0 || key==13 || key == 44)
+		return true; 
+	
+	if (key < 48 || key > 57) 
+	{
+		window.alert("Digite somente valores com vírgula.");
+		e.returnValue = false;
+		return false;
+	}
+	return true;
+}
+
+function fncOnKeyPressSomenteNumeros2(e) 
+{ 
+	var key=e.which; //keycode
+	if (key == null)
+		key = event.keyCode;
+	
+	if (key==8 || key==0)
+		return true; 
+	
+	if (key < 48 || key > 57) 
+	{
+		window.alert("Digite somente numeros.");
+		e.returnValue = false;
+		return false;
+	}
+	return true;
+}
+
+
+//Apagar esse metodo assim que substituir as chamadas desse método pelo seguinte: fncOnKeyUpSomenteNumeros(e, txt)
+function fncOnKeyUpSomenteNumeros(e)
+{
+	if (e.preventDefault)
+		return;
+			
+	var cpf = document.getElementById("txtCpf").value;
+	var i;
+	var chr;
+	var validChars = "0123456789"
+	var str = "";
+	var len = cpf.length;
+			
+	if (len==0)
+		return;
+			
+	for (i=0; i<len; i++)
+	{
+		chr = cpf.charAt(i);
+		if (validChars.indexOf(chr) != -1)
+			str += chr;
+	}
+			
+	document.getElementById("txtCpf").value = str;
+}
+
+function fncOnKeyUpSomenteNumeros(e, txt)
+{
+	if (e.preventDefault)
+		return;
+			
+	var cpf = txt.value;
+	var i;
+	var chr;
+	var validChars = "0123456789"
+	var str = "";
+	var len = cpf.length;
+			
+	if (len==0)
+		return;
+			
+	for (i=0; i<len; i++)
+	{
+		chr = cpf.charAt(i);
+		if (validChars.indexOf(chr) != -1)
+			str += chr;
+	}
+		
+	txt.value = str;
+}
+
+//-->
+
+//Adicionado por Denise Muniz
+
+
+function SomenteNumeros(obj)
+{
+	if (event.keyCode != 13 && (event.keyCode >=14 && event.keyCode < 48 || event.keyCode > 57 ))
+	{
+		alert("Por favor, digite apenas n\u00FAmeros."); 
+		obj.focus();
+		event.returnValue = false;
+	}
+}
+
+function validaCPF(cpf) {
+	
+	if (cpf.length != 11) 
+		return false;  //Sao necessarios 11 digitos para verificacao do CPF!
+			
+	var nonNumbers = /\D/;
+	if (nonNumbers.test(cpf)) 
+		return false; //A verificacao de CPF suporta apenas numeros!
+			
+	if (cpf == "00000000000" || cpf == "11111111111" || cpf == "22222222222" || cpf == "33333333333" || cpf == "44444444444" || cpf == "55555555555" || cpf == "66666666666" || cpf == "77777777777" || cpf == "88888888888" || cpf == "99999999999") 
+		return false; //Numero de CPF invalido!
+			
+	var a = [];
+	var b = new Number;
+	var c = 11;
+
+	for (i=0; i<11; i++){
+		a[i] = cpf.charAt(i);
+		if (i < 9)
+			b += (a[i] * --c);
+	}
+			
+	if ((x = b % 11) < 2)
+		a[9] = 0
+	else
+		a[9] = 11-x;
+			
+	b = 0;
+	c = 11;
+			
+	for (y=0; y<10; y++) 
+		b += (a[y] * c--);
+			
+	if ((x = b % 11) < 2)
+		a[10] = 0;
+	else
+		a[10] = 11-x;
+			
+	if ((cpf.charAt(9) != a[9]) || (cpf.charAt(10) != a[10]))
+		return false; //Digito verificador com problema!
+						
+	return true;
+}
+
+//Função de validaçào de CPF
+function cpf( num, obj ){
+
+
+if(num == "11111111111" ||
+   num == "22222222222" ||
+   num == "33333333333" ||
+   num == "44444444444" ||
+   num == "55555555555" ||
+   num == "66666666666" ||
+   num == "77777777777" ||
+   num == "88888888888" ||
+   num == "99999999999" ||
+   num == "00000000000" ||
+   num == "00000000272") {
+	alert("CPF inválido.");
+	obj.value = "";
+	obj.focus();
+	return false;
+
+}
+
+var n1 = 0
+    n2 = 0
+    n3 = 0
+    n4 = 0
+    n5 = 0
+    n6 = 0
+    n7 = 0
+    n8 = 0
+    n9 = 0
+    d1 = 0
+    d2 = 0
+    digitado = new String("")
+    calculado = ""
+    num1 = new String(num);
+
+if( num1.length == 0 ) return(true); //Não consiste
+        
+if ( num1.length == 11 ) {
+   n1 = parseInt( num1.substr(0,1) );
+   n2 = parseInt( num1.substr(1,1) );
+   n3 = parseInt( num1.substr(2,1) );
+   n4 = parseInt( num1.substr(3,1) );
+   n5 = parseInt( num1.substr(4,1) );
+   n6 = parseInt( num1.substr(5,1) );
+   n7 = parseInt( num1.substr(6,1) );
+   n8 = parseInt( num1.substr(7,1) );
+   n9 = parseInt( num1.substr(8,1) );
+   
+   d1 = n9*2+n8*3+n7*4+n6*5+n5*6+n4*7+n3*8+n2*9+n1*10;
+   d1 = 11-(d1 % 11);
+   
+   if ( d1>=10 ) d1 = 0;
+   
+   d2 = d1*2+n9*3+n8*4+n7*5+n6*6+n5*7+n4*8+n3*9+n2*10+n1*11;
+   d2 = 11-(d2 % 11);
+   
+   if ( d2>=10 ) d2 = 0;
+   
+   calculado = ("" + d1) + ( "" + d2);
+   
+   digitado = num1.substr(9,1);
+   digitado += num1.substr(10,1);
+   
+   if ( calculado==digitado )
+     return true; 
+   else
+	alert("CPF invalido.");
+	obj.value = ""
+	obj.focus();
+     return  false;
+
+}
+else 
+	alert("CPF invalido.");
+	obj.value = ""
+	obj.focus();
+  return false;
+  
+}
+
+//Adicionado por Denise Muniz
+
+
+function verificaTexto() {
+  
+	if (event.keyCode == 13) {
+	    event.returnValue = true;
+	}
+	else if (event.keyCode == 8) {
+	    event.returnValue = true;
+	}
+	else if (event.keyCode == 9) {
+	    event.returnValue = true;
+	}else if (event.keyCode == 32) {
+	    event.returnValue = true;
+	}
+	else if (event.keyCode == 40){
+	    event.returnValue = true;
+	}
+	else if (event.keyCode == 41){
+	    event.returnValue = true;
+	}
+	else if (event.keyCode >= 44 && event.keyCode <= 46) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode >= 48 && event.keyCode <= 57) {
+	    event.returnValue = true;
+	}
+	else if (event.keyCode >= 65 && event.keyCode <= 90) {
+	    event.returnValue = true;
+	}
+	else if (event.keyCode >= 97 && event.keyCode <= 122) {
+	    event.returnValue = true;
+	}
+	else if (event.keyCode == 127) {
+	    event.returnValue = true;
+	}
+	else {
+		alert("Por favor, digite somente letras n\u00E3o acentuadas, espa\u00E7o, h\u00EDfen ou n\u00FAmeros."); 	
+		event.returnValue = false;
+	}
+}
+
+
+function validaDataCompl(str){
+
+	var dia, mes, ano, hora, min, cons, 
+	dtatual  = new Date();
+
+	
+
+	dia = (str.substring(0,2));
+	mes = (str.substring(3,5));
+	ano = (str.substring(6,10));
+	hora = (str.substring(11,13));
+	min = (str.substring(14,16));
+
+	cons = true
+
+	if (isNaN(dia) || isNaN(mes) || isNaN(ano)||isNaN(hora)||isNaN(min)){
+		alert("Preencha a data somente com número.");
+		return false;
+	}
+	
+	if(dia < 01 || (dia<01 || dia > 30) && (mes == 04 || mes == 06 || mes == 09 || mes == 11) || dia > 31){
+		cons = false;
+	}
+	if (mes < 01 || mes > 12){
+		cons = false;
+	}
+	if (mes == 2 && (dia < 01 || dia > 29 || ( dia > 28 && ( parseInt(ano/4) != ano / 4)))) {
+		cons = false;
+	}
+	if(hora< 1 || hora > 24 ){
+		cons = false;
+	}
+	if(min< 0 || min > 60 ){
+		cons = false;
+	}
+	
+	if (dia == "" && mes == "" && ano == ""){
+		return false;
+	}else if (cons == false){
+		alert("A data inserida não é válida:" + str);
+		return false;
+
+
+	}
+}
+
+
+
+function validaData(str, obj){
+
+	var dia, mes, ano, cons, 
+	dtatual  = new Date();
+
+	
+
+	dia = (str.substring(0,2));
+	mes = (str.substring(3,5));
+	ano = (str.substring(6,10));
+	
+
+	cons = true
+
+	if (isNaN(dia) || isNaN(mes) || isNaN(ano)){
+		alert("Preencha a data somente com número.");
+		obj.value = "";
+		obj.focus();
+		return false;
+	}
+	
+	if(dia < 01 || (dia<01 || dia > 30) && (mes == 04 || mes == 06 || mes == 09 || mes == 11) || dia > 31){
+		cons = false;
+	}
+	if (mes < 01 || mes > 12){
+		cons = false;
+	}
+	if (mes == 2 && (dia < 01 || dia > 29 || ( dia > 28 && ( parseInt(ano/4) != ano / 4)))) {
+		cons = false;
+	}
+	if (ano == (dtatual.getFullYear()) && (mes == (dtatual.getMonth()+1)) && (dia > (dtatual.getDate())) ){
+		cons = false;
+	}
+	if (ano == (dtatual.getFullYear()) && (mes > (dtatual.getMonth()+1)) ){
+		cons = false;
+	}
+	if (ano > (dtatual.getFullYear())){
+		cons = false;
+	}
+	
+	if (dia == "" && mes == "" && ano == ""){
+		obj.value = "";
+		return false;
+	}else if (cons == false){
+		alert("A data inserida não é válida:" + str);
+		obj.value = "";
+		obj.focus();
+		return false;
+
+
+	}
+}
+
+
+function formataDataComp(val)
+{
+   	var strPass = val.value;
+	var mikExp = /[0123456789]/;
+	//alert (strPass.length); 
+	for(i=0; i<strPass.length; i++){
+		// charAt -> retorna o caractere posicionado no índice especificado
+		var lchar = val.value.charAt(i);
+		var nchar = val.value.charAt(i+1);
+	
+		if(i==0){
+		   // search -> retorna um valor inteiro, indicando a posição do inicio da primeira
+		   // ocorrência de expReg dentro de instStr. Se nenhuma ocorrencia for encontrada o método retornara -1
+		   // instStr.search(expReg);
+		   if ((lchar.search(mikExp) != 0) || (lchar>3)){
+			  val.value = "";
+		   }
+		   
+		}else if(i==1){
+			   
+			   if(lchar.search(mikExp) != 0){
+				  // substring(indice1,indice2)
+				  // indice1, indice2 -> será usado para delimitar a string
+				  var tst1 = val.value.substring(0,(i));
+				  val.value = tst1;				
+ 				  
+				  continue;			
+				  
+			   }
+			   
+			   if ((nchar != '/') && (nchar != '')){
+				 	var tst1 = val.value.substring(0, (i)+1);
+				
+					if(nchar.search(mikExp) != 0) 
+						var tst2 = val.value.substring(i+2, strPass.length);
+					else
+						var tst2 = val.value.substring(i+1, strPass.length);
+	
+					val.value = tst1 + '/' + tst2;
+			   	
+			   }
+
+		 }else if(i==4){
+			
+				if(lchar.search(mikExp) != 0){
+					var tst1 = val.value.substring(0, (i));
+					val.value = tst1;
+					continue;			
+				}
+		
+				if	((nchar != '/') && (nchar != '')){
+					var tst1 = val.value.substring(0, (i)+1);
+
+					if(nchar.search(mikExp) != 0) 
+						var tst2 = val.value.substring(i+2, strPass.length);
+					else
+						var tst2 = val.value.substring(i+1, strPass.length);
+	
+					val.value = tst1 + '/' + tst2;
+				}
+   		  }else if(i==9){
+			
+				//if(lchar.search(mikExp) != 0){
+				//	var tst1 = val.value.substring(0, (i));
+				//	val.value = tst1;
+				//	continue;			
+				//
+				
+				if	(nchar != ' '){
+					var tst1 = val.value.substring(0, (i)+1);
+					
+					if(nchar.search(mikExp) != 0) 
+						var tst2 = val.value.substring(i+2, strPass.length);
+					else
+						var tst2 = val.value.substring(i+1, strPass.length);
+	
+					val.value = tst1 + ' ' + tst2;
+				}
+				
+		  }else if(i==12){
+			
+				if(lchar.search(mikExp) != 0){
+					var tst1 = val.value.substring(0, (i));
+					val.value = tst1;
+					continue;			
+				
+				} 
+				if	((nchar != ':') && (nchar != '')){
+					var tst1 = val.value.substring(0, (i)+1);
+					
+					if(nchar.search(mikExp) != 0) 
+						var tst2 = val.value.substring(i+2, strPass.length);
+					else
+						var tst2 = val.value.substring(i+1, strPass.length);
+	
+					val.value = tst1 + ':' + tst2;
+				}
+				
+		  }	 	 
+		  
+		  
+		  
+		  
+		  
+		  		
+		  if(i>=16){
+			  if(lchar.search(mikExp) != 0) {
+					var tst1 = val.value.substring(0, (i));
+					val.value = tst1;			
+			  }
+		  }
+	 }
+	
+     if(strPass.length>16)
+		val.value = val.value.substring(0, 16);
+	 	return true;
+}
+
+
+function formataData(val)
+{
+   	var strPass = val.value;
+	var mikExp = /[0123456789]/;
+		
+	for(i=0; i<strPass.length; i++){
+		// charAt -> retorna o caractere posicionado no índice especificado
+		var lchar = val.value.charAt(i);
+		var nchar = val.value.charAt(i+1);
+	
+		if(i==0){
+		   // search -> retorna um valor inteiro, indicando a posição do inicio da primeira
+		   // ocorrência de expReg dentro de instStr. Se nenhuma ocorrencia for encontrada o método retornara -1
+		   // instStr.search(expReg);
+		   if ((lchar.search(mikExp) != 0) || (lchar>3)){
+			  val.value = "";
+		   }
+		   
+		}else if(i==1){
+			   
+			   if(lchar.search(mikExp) != 0){
+				  // substring(indice1,indice2)
+				  // indice1, indice2 -> será usado para delimitar a string
+				  var tst1 = val.value.substring(0,(i));
+				  val.value = tst1;				
+ 				  
+				  continue;			
+				  
+			   }
+			   
+			   if ((nchar != '/') && (nchar != '')){
+				 	var tst1 = val.value.substring(0, (i)+1);
+				
+					if(nchar.search(mikExp) != 0) 
+						var tst2 = val.value.substring(i+2, strPass.length);
+					else
+						var tst2 = val.value.substring(i+1, strPass.length);
+	
+					val.value = tst1 + '/' + tst2;
+			   	
+			   }
+
+		 }else if(i==4){
+			
+				if(lchar.search(mikExp) != 0){
+					var tst1 = val.value.substring(0, (i));
+					val.value = tst1;
+					continue;			
+				}
+		
+				if	((nchar != '/') && (nchar != '')){
+					var tst1 = val.value.substring(0, (i)+1);
+
+					if(nchar.search(mikExp) != 0) 
+						var tst2 = val.value.substring(i+2, strPass.length);
+					else
+						var tst2 = val.value.substring(i+1, strPass.length);
+	
+					val.value = tst1 + '/' + tst2;
+				}
+   		  }
+		
+		  if(i>=6){
+			  if(lchar.search(mikExp) != 0) {
+					var tst1 = val.value.substring(0, (i));
+					val.value = tst1;			
+			  }
+		  }
+	 }
+	
+     if(strPass.length>10)
+		val.value = val.value.substring(0, 10);
+	 	return true;
+}
+
+function MascaraMoeda(objTextBox, SeparadorMilesimo, SeparadorDecimal, e){
+    var sep = 0;
+    var key = '';
+    var i = j = 0;
+    var len = len2 = 0;
+    var strCheck = '0123456789';
+    var aux = aux2 = '';
+    var whichCode = (window.Event) ? e.which : e.keyCode;
+    if (whichCode == 13) return true;
+    key = String.fromCharCode(whichCode); // Valor para o código da Chave
+    if (strCheck.indexOf(key) == -1) return false; // Chave inválida
+    len = 13
+    for(i = 0; i < len; i++)
+        if ((objTextBox.value.charAt(i) != '0') && (objTextBox.value.charAt(i) != SeparadorDecimal)) break;
+    aux = '';
+    for(; i < len; i++)
+        if (strCheck.indexOf(objTextBox.value.charAt(i))!=-1) aux += objTextBox.value.charAt(i);
+    aux += key;
+    len = aux.length;
+    if (len == 0) objTextBox.value = '';
+    if (len == 1) objTextBox.value = '0'+ SeparadorDecimal + '0' + aux;
+    if (len == 2) objTextBox.value = '0'+ SeparadorDecimal + aux;
+    if (len > 2) {
+        aux2 = '';
+        for (j = 0, i = len - 3; i >= 0; i--) {
+            if (j == 3) {
+                aux2 += SeparadorMilesimo;
+                j = 0;
+            }
+            aux2 += aux.charAt(i);
+            j++;
+        }
+        objTextBox.value = '';
+        len2 = aux2.length;
+        for (i = 14 - 1; i >= 0; i--)
+        objTextBox.value += aux2.charAt(i);
+        objTextBox.value += SeparadorDecimal + aux.substr(len - 2, len);
+    }
+    return false;
+}
+
+function formataMoeda(campo,tammax,teclapres,decimal) {
+
+	var tecla = teclapres.keyCode;
+	vr = Limpar(campo.value,"0123456789");
+	tam = vr.length;
+	dec=decimal
+
+	if (tam < tammax && tecla != 8){ tam = vr.length + 1 ; }
+
+	if (tecla == 8 ){ 
+		tam = tam - 1 ; 
+	}
+
+	if ( tecla == 8 || tecla >= 48 && tecla <= 57 || tecla >= 96 && tecla <= 105 ){
+		if ( tam <= dec ){ 
+			campo.value = vr ; 
+		}
+		if ( (tam > dec) && (tam <= 5) ){
+			campo.value = vr.substr( 0, tam - 2 ) + "," + vr.substr( tam - dec, tam ) ; 
+		}
+		if ( (tam >= 6) && (tam  <= 8) ){
+			campo.value = vr.substr( 0, tam - 5 ) + "." + vr.substr( tam - 5, 3 ) + "," + vr.substr( tam - dec, tam ) ; 
+		}
+		if ( (tam >= 9) && (tam <= 11) ){
+			campo.value = vr.substr( 0, tam - 8 ) + "." + vr.substr( tam - 8, 3 ) + "." + vr.substr( tam - 5, 3 ) + "," + vr.substr( tam - dec, tam ) ; 
+		}
+		if ( (tam >= 12) && (tam <= 14) ){
+			campo.value = vr.substr( 0, tam - 11 ) + "." + vr.substr( tam - 11, 3 ) + "." + vr.substr( tam - 8, 3 ) + "." + vr.substr( tam - 5, 3 ) + "," + vr.substr( tam - dec, tam ) ; 
+		}
+		if ( (tam >= 15) && (tam <= 17) ){
+			campo.value = vr.substr( 0, tam - 14 ) + "." + vr.substr( tam - 14, 3 ) + "." + vr.substr( tam - 11, 3 ) + "." + vr.substr( tam - 8, 3 ) + "." + vr.substr( tam - 5, 3 ) + "," + vr.substr( tam - 2, tam ) ;
+		}
+	}
+	else if(tecla != 9){
+		campo.value = vr ; 
+	}
+}
+
+function Limpar(valor, validos) {
+	// retira caracteres invalidos da string
+
+	var result = "";
+	var aux;
+	for (var i=0; i < valor.length; i++) {
+		aux = validos.indexOf(valor.substring(i, i+1));
+		if (aux>=0) {
+			result += aux;
+		}
+	}
+	return result;
+}
+
+function verificaNome() {
+	if (event.keyCode == 32) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode == 45) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode >= 65 && event.keyCode <= 90) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode >= 97 && event.keyCode <= 122) {
+		event.returnValue = true;
+	}
+	else {
+		alert("Por favor, digite somente letras não acentuadas, espaço ou hífen."); 	
+		event.returnValue = false;
+	}
+}
+
+function verificaRG() {
+	if (event.keyCode == 32) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode == 45) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode >= 48 && event.keyCode <= 57) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode >= 65 && event.keyCode <= 90) {
+		event.returnValue = true;
+	}
+	else if (event.keyCode >= 97 && event.keyCode <= 122) {
+		event.returnValue = true;
+	}
+	else {
+		alert("Por favor, digite somente letras não acentuadas, espaço, hífen ou números."); 	
+		event.returnValue = false;
+	}
+}
+
+function validaFeriado(str, obj, anobase){
+
+	var dia, mes, ano, cons, 
+	dtatual  = new Date();
+
+
+
+	dia = (str.substring(0,2));
+	mes = (str.substring(3,5));
+	ano = (str.substring(6,10));
+
+
+	cons = true
+
+	if (isNaN(dia) || isNaN(mes) || isNaN(ano)){
+		alert("Preencha a data somente com número.");
+		obj.value = "";
+		obj.focus();
+		return false;
+	}
+	
+	if(dia < 01 || (dia<01 || dia > 30) && (mes == 04 || mes == 06 || mes == 09 || mes == 11) || dia > 31){
+		cons = false;
+	}
+	if (mes < 01 || mes > 12){
+		cons = false;
+	}
+	if (mes == 2 && (dia < 01 || dia > 29 || ( dia > 28 && ( parseInt(ano/4) != ano / 4)))) {
+		cons = false;
+	}
+	if (ano != anobase){
+		cons = false;
+		
+	}
+	if ((anobase == dtatual.getFullYear()) && (mes < (dtatual.getMonth()+1))){
+		cons = false;
+	}
+	if ((anobase == dtatual.getFullYear()) && (mes == (dtatual.getMonth()+1)) && (dia <= dtatual.getDate())){
+		cons = false;
+	}
+	if (dia == "" && mes == "" && ano == ""){
+		obj.value = "";
+		return false;
+	}else if (cons == false){
+		alert('A data inserida não é válida.\n Favor inserir posterior a data atual: ' + dtatual.getDate() + '/' + (dtatual.getMonth()+1) + '/' + dtatual.getFullYear() + '.');
+		obj.value = "";
+		obj.focus();
+		return false;
+	}
+}
+
+function FormataValorORACLE(pValor)
+{
+   var i;
+   var pNovoValor;
+
+   pNovoValor = "";
+
+   if(pValor != "")
+   {
+      i = 0;
+      while(i < pValor.length)
+      {
+         if ((pValor.charAt(i) != ".") && (pValor.charAt(i) != ","))
+         {
+            if (i==0)
+               pNovoValor = pValor.charAt(i);
+            else
+               pNovoValor = pNovoValor + pValor.charAt(i);
+
+         }
+         i = i + 1;
+      }
+
+      pNovoValor = pNovoValor.substring(0,(pNovoValor.length - 2)) + "." + pNovoValor.substring((pNovoValor.length - 2),pNovoValor.length)
+   }
+
+   return (pNovoValor);
+}
+
+
+/*--------------------------------------------------------------------
+   Descrição   :Formata valores em formato Brasileiro.
+   Parâmetros  :Valor
+   Retorno     :NovoValor
+---------------------------------------------------------------------*/
+ 
+function FormataValorBRA(pValor)
+{
+   var i;
+   var j;
+   var iDecimal;
+   var iInteiro;
+   var iNovoValor;
+
+   iInteiro = pValor;
+   iDecimal = '00';
+
+   // Separa a parte Inteira da parte Decimal
+   i = 0;
+   for (i = 0; i < pValor.length; i++)
+   {
+      if (pValor.charAt(i) == ".")
+      {
+         iInteiro = pValor.substring(0,i);
+         iDecimal = pValor.substring(i + 1,pValor.length);
+      }
+   }
+
+   // Formata a parte decimal para duas casas no mínimo.
+   if (iDecimal.length == 1)
+   {
+      iDecimal = iDecimal + "0";
+   }
+
+   // Formata a parte Inteira.
+   iNovoValor = '';
+   j = 0;
+   for (i = iInteiro.length; i > 0; i--)
+   {
+      j = j + 1;
+      if (j == 4)
+      {
+         iNovoValor = iInteiro.substring(i,i-1) + '.' + iNovoValor;
+         j = 1;
+      }
+      else
+      {
+         iNovoValor = iInteiro.substring(i,i-1) + iNovoValor;
+      }
+   }
+
+   // Agrega a Parte decimal ao novo valor
+   iNovoValor = iNovoValor + "," + iDecimal;
+
+   return (iNovoValor);
+}
+
+/*--------------------------------------------------------------------
+Descrição    : Formata o número no padrão brasileiro
+Parâmetros   : Valor e quantidade de casas decimais
+Retorno      : Número formatado
+
+Atualizações : 
+[00] Descrição : 
+     Data      : 16/07/2004
+     Autor     : Fabio Danjo
+---------------------------------------------------------------------*/
+
+function FormatNumber(pV, qD) {
+
+	var i;
+	var j;
+	var iDecimal;
+	var iInteiro;
+	var iNovoValor;
+	var soma="";
+
+	pValor = pV+""
+	iInteiro = pValor;
+	
+	// Separa a parte Inteira da parte Decimal
+	i = 0;
+	for (i = 0; i < pValor.length; i++){	
+		if (pValor.charAt(i) == "."){
+			iInteiro = pValor.substring(0,i);
+			break;
+		}	
+	}
+				
+	for (i = 0; i < qD-1; i++){
+		soma=soma + 0;
+	}
+	soma = soma + 1;
+						
+	// Formata a parte decimal para qD casas
+	if (pValor.indexOf(".") != -1) {
+		iDecimal = pValor.substring(pValor.indexOf(".")+1,pValor.length)+""; 
+		if 	(iDecimal.length < qD) {
+			while (iDecimal.length != qD) {
+				iDecimal = iDecimal + "0";
+			}
+		}
+		else if (iDecimal.length > qD) {
+			if ((iDecimal.substring(qD,qD + 1) > 5)){
+				iDecimal = iDecimal.substring(0,qD);
+				aux = parseFloat(iDecimal) + parseFloat(soma);
+				iDecimal = aux + "";
+								
+				if(parseFloat(iDecimal.length) > qD){
+					iDecimal = iDecimal.substring(1,qD+1);
+					iInteiro = parseFloat(iInteiro) + 1 + "";
+				}	
+				else if(parseFloat(iDecimal.length) < qD){
+					iDecimal = "0" + iDecimal;
+				}
+								
+			} 
+			else 
+				iDecimal = iDecimal.substring(0,qD);
+		}
+	}
+	else {
+		iDecimal = "";
+		for(i=1;i<=qD;i++)
+			iDecimal = iDecimal + "0"; 
+	}
+
+				
+	// Formata a parte Inteira.
+	iNovoValor = '';
+	j = 0;
+				
+	for (i = iInteiro.length; i > 0; i--)
+	{	j = j + 1;
+		if (j == 4)
+		{	iNovoValor = iInteiro.substring(i,i-1) + '.' + iNovoValor;
+			j = 1;
+		}
+		else
+		{	iNovoValor = iInteiro.substring(i,i-1) + iNovoValor;
+		}
+	}
+					
+	// Agrega a Parte decimal ao novo valor se houver casas decimais
+	if (iDecimal != ""){
+		iNovoValor = iNovoValor + "," + iDecimal;
+	}
+
+	return (iNovoValor);
+}
+
+
+//******************************************************************************************
+// Função AJAX para popular os combos sem submit
+function getRequest(){
+	
+	var http_request = false;
+	
+	if (window.XMLHttpRequest){
+		
+		http_request = new XMLHttpRequest();
+		if (http_request.overrideMimeType){
+			http_request.overrideMimeType('text/xml')
+		}
+		
+	}else if (window.ActiveXObject) {
+		try{
+		
+			http_request = new ActiveXObject("Msxml2.XMLHTTP");
+		
+		}catch(e){
+			try{
+			
+				http_request = new ActiveXObject("Microsoft.XMLHTTP");
+			
+			}catch(e){}
+		}
+		
+	}
+	return http_request;
+	
+}
+
+function Enviar(url, func){
+	
+	hr = getRequest();
+	
+	if (!hr) return;
+	hr.onreadystatechange = func;
+	hr.open('GET', url, true);
+	hr.send(null);
+}
+
+function EnviarMulti(url, func){
+	
+	var endr
+	endr = getRequest();
+	
+	if (!endr) return;
+	endr.onreadystatechange = func;
+	endr.open('GET', url, true);
+	endr.send(null);	
+
+	return endr;
+	
+}
+
+function UltimoDiaDoMes(mes,ano) {
+	var m = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+	if (mes != 2) return m[mes - 1];
+	if (ano % 4 != 0) return m[1];
+	if (ano % 100 == 0 && ano%400 != 0) return m[1];
+
+	return m[1] + 1;
+}		
+
+var hr = false;
+
+//********************************************************************************************
+
+</script>
+
+
+<html>
+<head>
+<title>Intranet UNIBAN</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<script language="JavaScript">
+
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+
+function MM_findObj(n, d) { //v3.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document); return x;
+}
+
+function MM_showHideLayers() { //v3.0
+  var i,p,v,obj,args=MM_showHideLayers.arguments;
+  for (i=0; i<(args.length-2); i+=3) if ((obj=MM_findObj(args[i]))!=null) { v=args[i+2];
+    if (obj.style) { obj=obj.style; v=(v=='show')?'visible':(v='hide')?'hidden':v; }
+    obj.visibility=v; }
+}
+//-->
+</script>
+
+<link rel="stylesheet" href="../api.css">
+</head>
+<body class="BODY" onLoad="javascript:StartApp();">
+
+  
+  
+
+<DIV id="lyWait" style="position:absolute; width:200px; height:115px; z-index:1; left: 15px; top: 163px; visibility:hidden;"><img src="../images/statusbar.gif" width=146 height=39></DIV>
+
+<script language=javascript>
+  if (navigator.appName != 'Netscape')
+    document.getElementById("lyWait").style.visibility = "visible";
+</script>
+
+<div id='WebCabecalhoPadrao1'>     <Fieldset id='wccFieldSetGeral' style='height:15px;border:1px solid #ccc;width:100%;vertical-align:middle;FONT-STYLE:normal;top:-10px;padding-right:10px;FONT-FAMILY:Verdana, Arial, Helvetica, sans-serif;left:8px;font-size:10px;'>     <Legend id='wccLegendUsuario' style='color:#b3200f;background:#F2F2F2;font-size:10px;font-weight:bold;border:1px solid #ccc;padding:2px 6px;'>Usuário: (810309) - TANIA NUNES BAPTISTA ARRUDA</Legend>     <Div id='wccDivHorarioDepto' style='text-align:left;float:left;padding-left:14px;width:280px;vertical-align:sub;height:15px;line-height:4mm;'>09/04/2011 - 16:30:52</Div>    <Div id='wccdivTitulo' style='text-align:left;'><Div id='wccdivTituloInterno' style='padding-right:10px;font-weight:bold;font-size:11px;text-transform:uppercase;vertical-align:super;width:100%;'>:: Plano Disciplinar</Div></Div>     <Div id='wccDivHorarioDepto2' style='text-align:left;float:left;padding-left:14px;width:280px;vertical-align:sub;height:15px;line-height:4mm;'>&nbsp;</Div>    <Div id='wccdivTitulo2' style='color:#666;text-align:left;'><Div id='wccdivTituloInterno2' style='padding-right:10px;font-size:9px;text-transform:uppercase;vertical-align:super;width:100%;'><b>Curso:</b> SISTEMAS DE INFORMAÇÃO - <b>Ano Letivo:</b>2011 - <b>Ano:</b> 4 </Div></Div>     </Fieldset> </div><br>
+  
+  <table width="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+     <tr> 
+      <td width="21%"  class="style6" >Ano Letivo:</td>
+      <td  class="Estilo7" COLSPAN="2">2011</td>
+     
+    </tr>
+     <tr> 
+      <td  class="style6" >Curso:</td>
+      <td width="35%"  class="Estilo7">AS</td>
+      <td width="44%"  class="Estilo7">SISTEMAS DE INFORMAÇÃO&nbsp;</td>
+    </tr>
+     <tr> 
+      <td  class="style6" >Série:</td>
+      <td class="Estilo7" COLSPAN="2">4</td>
+      
+    </tr>
+    <tr> 
+      <td  class="style6" >Disciplina:</td>
+      <td  class="Estilo7" >AS401310</td>
+      <td  class="Estilo7" >Engenharia de Software</td>
+    </tr>
+    
+     <tr> 
+      <td  class="style6" >Carga Anual:</td>
+      <td  class="Estilo7" COLSPAN="2">132</td>
+      
+    </tr>
+    
+ </table>
+  <br>
+  <table width="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td class="top-verm">Ementa:</td>
+    </tr>
+    
+		<tr > 
+		  <td class="border_total">Fases do Ciclo de Vida do Desenvolvimento de Software, apresentando como os métodos, ferramentas e procedimentos da engenharia de software, podem ajudar as organizações a desenvolver sistemas de acordo com os custos, prazos, recursos e a qualidade planejadas.</td>
+		</tr>
+    
+</table>
+<br>
+  <table width="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td class="top-verm">Justificativa:</td>
+    </tr>
+    
+		<tr > 
+		  <td class="border_total">A disciplina Engenharia de Software contribui com a teoria e prática do projeto e construção do produto de software de computador, observando o sistema a partir da perspectiva de um engenheiro. A organização da disciplina mostra a evolução da construção do produto ao longo das etapas do ciclo de vida do desenvolvimento. Na pesquisa das possíveis causas, caminhos e soluções, a disciplina apresenta conceitos no seu contexto de aplicação, exemplos reais que contribuem à compreensão das técnicas de desenvolvimento, gerenciamento de projetos de software em empresas, papéis das equipes de desenvolvimento em cada estágio do processo e mudanças que afetam o modo da prática da engenharia de software.</td>
+		</tr>
+    
+</table>
+  <br>
+  <table width="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td class="top-verm">Objetivos Gerais:</td>
+    </tr>
+    
+		<tr > 
+		  <td class="border_total">Apresentar conceitos da Engenharia de Software. Discutir a importância da Engenharia de Software no processo de desenvolvimento de sistemas. Atuar em tarefas complexas, desafiadoras e estimulantes, dispor conhecimentos ao aluno sobre os principais métodos, ferramentas, procedimentos, classificações e tipos de sistemas de informação. Discutir os principais aspectos que levam as organizações a utilizar as melhores práticas da Engenharia de Software. Discutir aspectos que levam a altos custos, falhas de estimativas de prazos, baixa produtividade dos desenvolvedores em relação a demanda e insatisfação dos usuários. Capacitar os alunos a identificar problemas, determinar processos, elaborar projetos e atividades do pessoal no desenvolvimento ou manutenção do software.</td>
+		</tr>
+    
+</table>
+  
+  <br>
+  <TABLE WIDTH="98%" BORDER="0" align="center" CELLPADDING="2" CELLSPACING="2">
+	<TR > 
+	  <TD COLSPAN="5" class="top-verm">Conte&uacute;do Program&aacute;tico</TD>
+	</TR>
+	<TR > 
+	  <TD WIDTH="3%" class="TOP-cinza-1">Sem.</TD>
+	  <TD WIDTH="4%" class="TOP-cinza-1"> T&oacute;pico</TD>
+	  <TD WIDTH="6%" class="TOP-cinza-1"> Nº de Aulas</TD>
+      <TD WIDTH="7%" class="TOP-cinza-1">Carga Horária</TD>
+	  <TD WIDTH="80%" class="TOP-cinza-1">Descri&ccedil;&atilde;o</TD>
+	</TR>
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 01</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Organiza&#231;&#227;o e Planejamento did&#225;tico-pedag&#243;gico da disciplina. Elabora&#231;&#227;o dos instrumentos de avalia&#231;&#227;o semestral.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 02</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Apresenta&#231;&#227;o da disciplina, objetivos, conte&#250;do program&#225;tico, bibliografia, crit&#233;rios e sistema de avalia&#231;&#227;o. Conceitos introdut&#243;rios.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 03</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  O que &#233; Engenharia de Software? &#8211; Produto: evolu&#231;&#227;o, caracter&#237;stica e aplica&#231;&#227;o.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 04</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Engenharia de Sistemas. &#8211; Sistemas Baseados em Computador. &#8211; A Hierarquia da Engenharia de Sistemas.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 05</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Engenharia de Sistemas (continua&#231;&#227;o). &#8211; Engenharia de processo de neg&#243;cio. &#8211; Engenharia de produto.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 06</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Qual a diferen&#231;a entre Engenharia de Software e Engenharia de Sistemas? Quais s&#227;o os atributos de um bom Software?  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 07</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Quais s&#227;o os desafios enfrentados pela Engenharia de Software? Software: Uma crise no horizonte. &#8211; Mitos do software.   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 08</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Paradigmas da Engenharia de Software - Processo, M&#233;todos e Ferramentas. &#8211; O processo de software. - Modelagem do Processo e Ciclo de Vida.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 09</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelos de Processo de Software. - Modelo Balb&#250;rdia - Modelo Cascata (ou Sequencial linear).   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 10</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelos de Processo de Software. (continua&#231;&#227;o) - Modelo Incremental - Prototipa&#231;&#227;o.   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 11</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelos de Processo de Software. (continua&#231;&#227;o) - Modelo Espiral &#8211; Modelo RAD -Modelos mistos e caracter&#237;sticas gen&#233;ricas.   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 12</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelos de Processo de Software. (continua&#231;&#227;o) - Introdu&#231;&#227;o ao RUP (Rational Unified Process) &#8211; Caracter&#237;stica. - Fases e Workflow  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 13</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelos de Processo de Software. (continua&#231;&#227;o) - Introdu&#231;&#227;o ao RUP (Rational Unified Process) &#8211; Projeto e Arquitetura.&#160;  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 14</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelos de Processo de Software. (continua&#231;&#227;o) - Metodologias de Desenvolvimento &#193;gil de Software: XP, ASD e Scrum  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 15</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelos de Processo de Software. (continua&#231;&#227;o) - Metodologias de Desenvolvimento &#193;gil de Software (continua&#231;&#227;o): DSDM, FDD e AM.&#160;  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 16</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelagem &#8211; UML (Unified Modeling Language)&#8211; Aplica&#231;&#227;o da Linguagem de Modelagem Unificada na modelagem de sistemas  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 17</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Ferramentas de Modelagem e Constru&#231;&#227;o de Sistemas - Ferramenta CASE  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 18</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Ferramentas de Modelagem e Constru&#231;&#227;o de Sistemas (continua&#231;&#227;o) - Ferramenta CASE &#160;  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 19</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Revis&#227;o de conte&#250;do ministrado no 1&#186; semestre.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 20</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Avalia&#231;&#227;o da Coordena&#231;&#227;o (AC).  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 21</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Aulas de revis&#227;o das avalia&#231;&#245;es da coordena&#231;&#227;o. Corre&#231;&#227;o e Vista de provas.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 22</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Encerramento e balan&#231;o do semestre.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">1</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 23</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Organiza&#231;&#227;o e Planejamento did&#225;tico-pedag&#243;gico da disciplina. Elabora&#231;&#227;o dos instrumentos de avalia&#231;&#227;o semestral.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 24</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Modelagem de processos de neg&#243;cio - conceito, metodologias e ferramentas  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 25</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Requisitos de Software. - Conceitos. -Requisitos Funcionais e n&#227;o Funcionais.   - Estudos de Viabilidade.   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 26</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Requisitos de Software. -Processos de Engenharia de Requisitos. -Elicita&#231;&#227;o, An&#225;lise, Especifica&#231;&#227;o, Modelagem e Valida&#231;&#227;o.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 27</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Requisitos de Software.  - An&#225;lise e Elicita&#231;&#227;o de Requisitos: FAST, QFD e Casos de Uso.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 28</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Engenharia de Projeto. - Conceito. - Projeto Modular. - Projeto de interface com o usu&#225;rio.   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 29</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Engenharia de Software baseada em componentes - Conceito. - Engenharia de dom&#237;nio. - Desenvolvimento e classifica&#231;&#227;o.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 30</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Arquiteturas de Sistemas Distribu&#237;dos: Arquitetura de Multiprocessadores e Multicomputadores (Cluster e Middleware)  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 31</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Arquitetura Cliente/Servidor. -Arquitetura de Objetos Distribu&#237;dos (ORB).   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 32</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  T&#233;cnicas de Teste de Software: Fundamentos do teste de software. -Alfa, Beta, Caixa-branca e Caixa-preta  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 33</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Sistemas legados - Estruturas dos sistemas legados - Avalia&#231;&#227;o dos sistemas legados &#160;  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 34</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Mudan&#231;as em Software - Din&#226;mica da Evolu&#231;&#227;o de Programas - Evolu&#231;&#227;o da Arquitetura. &#160;  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 35</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Manuten&#231;&#227;o: fundamentos da fase de Manuten&#231;&#227;o de Software, tipos de Manuten&#231;&#227;o, procedimentos, t&#233;cnicas e ferramentas. &#160;  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 36</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Reengenharia de Software - Tradu&#231;&#227;o de c&#243;digo fonte - Engenharia Reversa - Melhoria de estrutura de programa   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 37</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Reengenharia de Dados e as suas abordagens &#160;  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 38</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Gerenciamento de Configura&#231;&#227;o - Gerenciamento de Mudan&#231;as - Gerenciamento de Vers&#245;es e Releases   
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 39</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Engenharia de Software na WEB &#8211; Sistemas e Aplica&#231;&#245;es baseadas na WEB  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 40</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Engenharia de Software na WEB &#8211; Sistemas e Aplica&#231;&#245;es baseadas na WEB  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 41</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Revis&#227;o de conte&#250;do ministrado no 2&#186; semestre  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 42</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Avalia&#231;&#227;o da Coordena&#231;&#227;o (AC).  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 43</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Aulas de revis&#227;o das avalia&#231;&#245;es da coordena&#231;&#227;o. Corre&#231;&#227;o e Vista de provas.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> 44</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">3</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">150</td>
+      <TD WIDTH="80%" class="border_total">
+	  Encerramento e balan&#231;o da disciplina.  
+</TD>
+	</TR>
+	
+	
+
+	<TR > 
+	  <TD WIDTH="3%" align="center" class="border_total">2</TD>
+	  <TD WIDTH="4%" align="center" class="border_total"> -</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">-</TD>
+	  <TD WIDTH="7%" align="center" class="border_total">60</td>
+      <TD WIDTH="80%" class="border_total">
+	  Exerc&#237;cios de fixa&#231;&#227;o  
+</TD>
+	</TR>
+	
+	
+
+<TR > 
+	  <TD COLSPAN="2" class="style5">Total Aulas Hs|Min</TD>
+	  <TD WIDTH="6%" align="center" class="border_total">132</TD>
+       <TD WIDTH="6%" align="center" class="border_total">7920</TD>
+	  <TD WIDTH="7%" class="border_total"></TD>
+</TR>	  
+</TABLE>
+
+  
+  <br>
+  <table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td class="top-verm">Avalia&ccedil;&atilde;o:</td>
+    </tr>
+    
+    
+		<tr > 
+		  <td class="border_total">Média Final (MF) ³ 5,0 e Frequência mínima de 75% (= Aprovado). Média Final (MF) ³ 7,0 e Frequência mínima de 70% (=
+Aprovado). Média Final (MF) ³ 8,0 e Frequência mínima de 65% (= Aprovado). Média Final (MF) ³ 9,0 e Frequência mínima
+de 60% (= Aprovado). MF = [(MS1 x 4) + (MS2 x 6)] / 10 (onde, MS1 = avaliação AC do 1º sem. e MS2 = avaliação AC do
+2º sem.). Escala de notas de 0 a 10, com intervalos de 0,5.</td>
+		</tr>
+    
+
+</table>
+   
+  <br>
+  <table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td class="top-verm">Estratégias Metodológicas:</td>
+    </tr>
+    
+    
+		<tr > 
+		  <td class="border_total">- Aulas expositivas, periodicamente apoiadas com pesquisas e estudos dos temas a serem abordados.
+
+- Dinâmicas de grupo. / Discussão de temas. / Estudo de casos.
+
+- Exercícios individuais e em grupo.</td>
+		</tr>
+    
+</table>
+<br>
+<table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+<tr > 
+  <td class="top-verm">Suporte Laboratorial:</td>
+</tr>
+
+
+    <tr > 
+      <td class="border_total">- Aulas com uso de recurso de multimidia.
+- Incentivo ao uso de demostração de ferramentas automatizadas para produção do software.</td>
+    </tr>
+
+</TABLE>
+  <br>
+  <table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td class="top-verm">Material de Consumo:</td>
+    </tr>
+    
+    
+		<tr > 
+		  <td class="border_total">Não há necessidade de material de consumo.</td>
+		</tr>
+    
+</TABLE>
+  <br>
+  <table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td class="top-verm">Atividades Externas:</td>
+    </tr>
+    
+    
+		<tr > 
+		  <td class="border_total">Não é necessário a realização de atividades externas.</td>
+		</tr>
+    
+</TABLE>     
+  <br>
+  <table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td colspan="2" class="top-verm">Bibliografia B&aacute;sica </td>
+    </tr>
+	
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        PRESSMAN,&nbsp;Roger S..&nbsp;<b><i>Engenharia de software</b></i>.&nbsp;São Paulo:&nbsp;Makron Books,&nbsp;2006. 
+      </td>
+    </tr>
+	
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        LARMAN,&nbsp;Craig.&nbsp;<b><i>Utilizando UML e padrões</b></i>.&nbsp;São Paulo:&nbsp;Bookman,&nbsp;2007. 
+      </td>
+    </tr>
+	
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        SOMMERVILLE,&nbsp;Ian.&nbsp;<b><i>Engenharia de software</b></i>.&nbsp;São Paulo:&nbsp;Pearson Addison Wesley,&nbsp;2008. 
+      </td>
+    </tr>
+	
+</table>
+  <br>
+  <table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td colspan="2" class="top-verm">Bibliografia Complementar</td>
+    </tr>
+     
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        TONSIG,&nbsp;Sérgio Luiz.&nbsp;<b><i>Engenharia de software : análise e projeto de sistemas</b></i>.&nbsp;São Paulo:&nbsp;Futura,&nbsp;2004. 
+      </td>
+    </tr>
+     
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        REZENDE,&nbsp;Denis Alcides.&nbsp;<b><i>Engenharia de software e sistemas de informação</b></i>.&nbsp;Rio de Janeiro:&nbsp;Brasport,&nbsp;2002. 
+      </td>
+    </tr>
+     
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        FERNANDES,&nbsp;Aguinaldo A..&nbsp;<b><i>Fábrica de software : implantação e gestão de operações</b></i>.&nbsp;São Paulo:&nbsp;Atlas,&nbsp;2004. 
+      </td>
+    </tr>
+     
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        PFLEEGER,&nbsp;Shari Lawrence.&nbsp;<b><i>Engenharia de software : teoria e prática</b></i>.&nbsp;São Paulo:&nbsp;Prentice-Hall,&nbsp;2004. 
+      </td>
+    </tr>
+     
+    <tr > 
+      <td colspan="2" class="border_total"> 
+        PAULA FILHO,&nbsp;Wilson de Pádua.&nbsp;<b><i>Engenharia de software : fundamentos, métodos e padrões</b></i>.&nbsp;Rio de Janeiro:&nbsp;LTC,&nbsp;2003. 
+      </td>
+    </tr>
+     
+</table>
+<br>
+  <table WIDTH="98%" border="0" align="center" cellpadding="2" cellspacing="2">
+    <tr > 
+      <td colspan="2" class="top-verm">Sugestão de Leitura</td>
+    </tr>
+     
+</table>
+  <br>
+
+  <br>
+  <font class="Estilo8">Emitido em 9/4/2011 ás 16:30:53 
+  por TANIA NUNES BAPTISTA ARRUDA 
+  na máquina 192.168.0.162</font><br>
+  <p>
+
+<script language=JavaScript>
+	function StartApp() {
+		LoadButton(acBack,'javascript:voltar()');
+	}
+	
+	function voltar() {
+		document.form1.action = "DiretorCampusDisciplinaCon.asp";
+		document.form1.submit();
+	}
+</script>
+
+</p>
+
+
+
+
+<script language=javascript>
+  if (navigator.appName != 'Netscape')
+    document.getElementById("lyWait").style.visibility = "hidden";
+</script>
+
+
+
+<form name="form1" method="post">
+	<input type="hidden" name="Ano"         value="2011-1">
+	<input type="hidden" name="Semestre"    value="4">
+	<input type="hidden" name="Curso"       value="AS">
+    <input type="hidden" name="Label"       value="Ano">
+    <input type="hidden" name="Pagina"       value="DiretorCampusDisciplina.asp">
+</form>
+</body>
+</html>
+
+ 
